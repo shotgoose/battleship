@@ -37,8 +37,8 @@ void vertex() {
 
 void fragment() {
 	float fresnel = 1.0 - dot(NORMAL, VIEW);
-	ALBEDO = mix(vec3(0.005, 0.025, 0.05), vec3(0.1, 0.1, 0.35), fresnel);
-	ROUGHNESS = 0.05;
+	ALBEDO = mix(vec3(0.005, 0.04, 0.03), vec3(0.05, 0.07, 0.15), fresnel);
+	ROUGHNESS = 0.0;
 	RIM = 0.2;
-	METALLIC = 0.1;
+	METALLIC = 0.3;
 }

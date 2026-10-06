@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://vhw3scn6wf63"]
 
 [ext_resource type="Shader" uid="uid://fqrxw7ri86t7" path="res://water_shader.gdshader" id="1_yvhtj"]
+[ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://camera_rig.gd" id="2_etjlb"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aq2ne"]
 
@@ -12,20 +13,45 @@ seamless = true
 render_priority = 0
 shader = ExtResource("1_yvhtj")
 shader_parameter/noisemap = SubResource("NoiseTexture2D_yvhtj")
-shader_parameter/wave_height = 0.2
+shader_parameter/wave_height = 1.0
 shader_parameter/normal_offset = 0.01
-shader_parameter/plane_size = 10.0
-shader_parameter/tile = 1.0
-shader_parameter/speed = 0.1
+shader_parameter/plane_size = 200.0
+shader_parameter/tile = 10.0
+shader_parameter/speed = 0.05
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_7y7d4"]
 material = SubResource("ShaderMaterial_yvhtj")
-size = Vector2(10, 10)
-subdivide_width = 32
-subdivide_depth = 32
+size = Vector2(200, 200)
+subdivide_width = 512
+subdivide_depth = 512
 
-[node name="MeshInstance3D" type="MeshInstance3D" unique_id=1040135878]
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_yvhtj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7y7d4"]
+
+[node name="WaterMesh" type="MeshInstance3D" unique_id=1040135878]
 mesh = SubResource("PlaneMesh_7y7d4")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=201992766]
 transform = Transform3D(1, 0, 0, 0, 0.84806406, 0.5298937, 0, -0.5298937, 0.84806406, 0, 0, 0)
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1406461982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.119782686, 0)
+physics_material_override = SubResource("PhysicsMaterial_yvhtj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=2077967570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.66319036, 0)
+shape = SubResource("BoxShape3D_d6hw4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D" unique_id=1990032901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6489965, 0)
+mesh = SubResource("BoxMesh_7y7d4")
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=1017615388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+script = ExtResource("2_etjlb")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=2085048926]
+transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 0, 0)
