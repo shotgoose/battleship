@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Battleship"
-run/main_scene="uid://vhw3scn6wf63"
+run/main_scene="uid://bi1socx5xrbum"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
