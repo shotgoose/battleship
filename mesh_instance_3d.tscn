@@ -51,6 +51,18 @@ next_pass = SubResource("ShaderMaterial_hbm4x")
 [sub_resource type="BoxMesh" id="BoxMesh_7y7d4"]
 material = SubResource("StandardMaterial3D_gw35f")
 
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_libwr"]
+rayleigh_color = Color(0.45619917, 0.6734651, 0.9550051, 1)
+turbidity = 5.0
+
+[sub_resource type="Sky" id="Sky_nh27e"]
+sky_material = SubResource("PhysicalSkyMaterial_libwr")
+
+[sub_resource type="Environment" id="Environment_allc3"]
+background_mode = 2
+sky = SubResource("Sky_nh27e")
+adjustment_enabled = true
+
 [node name="WaterMesh" type="MeshInstance3D" unique_id=1040135878]
 mesh = SubResource("PlaneMesh_7y7d4")
 
@@ -77,6 +89,7 @@ script = ExtResource("2_etjlb")
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=2085048926]
 transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 0, 0)
+environment = SubResource("Environment_allc3")
 
 [node name="SelectionController" type="Node" parent="." unique_id=356457935]
 script = ExtResource("5_hbm4x")

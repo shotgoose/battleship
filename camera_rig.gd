@@ -1,11 +1,19 @@
 extends Node3D
 
+@onready var camera : Camera3D = $Camera3D;
+
 const CAMERA_PAN_SPEED : float = 5;
 const CAMERA_ROTATE_SPEED : float = PI / 4;
 const CAMERA_ARC_RADIUS : float = 10;
+const CAMERA_ZOOM_SPEED : float = PI / 2;
+
+const MIN_ANGLE : float = - PI / 3;
+const MAX_ANGLE : float = - PI / 16;
+const HEIGHT_PER_RAD : float = 20;
 
 var movement_input : Vector2 = Vector2.ZERO;
 var rotation_input : float = 0;
+var zoom_input : int = 0;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -15,10 +23,18 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	movement_input = Input.get_vector("left", "right", "up", "down");
 	rotation_input = Input.get_axis("rotate ccw", "rotate cw");
+	zoom_input = int(Input.is_action_just_pressed("zoom out")) - int(Input.is_action_just_pressed("zoom in"));
 	
-	var angle = rotation_input * CAMERA_ROTATE_SPEED * delta;
-	var orbit_vector = Vector3(CAMERA_ARC_RADIUS * sin(angle), 0, CAMERA_ARC_RADIUS * (cos(angle) - 1));
+	var yaw = rotation_input * CAMERA_ROTATE_SPEED * delta;
+	var pitch = -zoom_input * CAMERA_ZOOM_SPEED * delta;
+	
+	rotate_y(yaw);
+	camera.rotate_x(pitch);
+	camera.rotation.x = clamp(camera.rotation.x, MIN_ANGLE, MAX_ANGLE);
+	
+	var height = abs(camera.rotation.x) * HEIGHT_PER_RAD;
+	var orbit_vector = Vector3(CAMERA_ARC_RADIUS * sin(yaw), 0, CAMERA_ARC_RADIUS * (cos(yaw) - 1));
 	var pan_vector = Vector3(movement_input.x, 0, movement_input.y) * CAMERA_PAN_SPEED * delta;
 	
-	rotate_y(angle);
 	translate(orbit_vector + pan_vector);
+	position.y = height;
