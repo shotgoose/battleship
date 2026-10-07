@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://vhw3scn6wf63"]
 
-[ext_resource type="Shader" uid="uid://fqrxw7ri86t7" path="res://water_shader.gdshader" id="1_yvhtj"]
-[ext_resource type="Script" uid="uid://cpluc5pope8en" path="res://selectable.gd" id="2_cn1gj"]
-[ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://camera_rig.gd" id="2_etjlb"]
-[ext_resource type="Script" uid="uid://do5w1w2ln60kr" path="res://ship_collision.gd" id="2_gw35f"]
-[ext_resource type="Shader" uid="uid://cg10u8q58xf10" path="res://outline_shader.gdshader" id="3_gw35f"]
-[ext_resource type="Script" uid="uid://b8akq3bbjnkur" path="res://selection_controller.gd" id="5_hbm4x"]
+[ext_resource type="Shader" uid="uid://fqrxw7ri86t7" path="res://shaders/water_shader.gdshader" id="1_yvhtj"]
+[ext_resource type="Script" uid="uid://cpluc5pope8en" path="res://scripts/selectable.gd" id="2_cn1gj"]
+[ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://scripts/camera_rig.gd" id="2_etjlb"]
+[ext_resource type="Script" uid="uid://do5w1w2ln60kr" path="res://scripts/ship_collision.gd" id="2_gw35f"]
+[ext_resource type="Shader" uid="uid://cg10u8q58xf10" path="res://shaders/outline_shader.gdshader" id="3_gw35f"]
+[ext_resource type="Script" uid="uid://b8akq3bbjnkur" path="res://scripts/selection_controller.gd" id="5_hbm4x"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aq2ne"]
 
