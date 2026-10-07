@@ -2,6 +2,9 @@
 
 [ext_resource type="Shader" uid="uid://fqrxw7ri86t7" path="res://water_shader.gdshader" id="1_yvhtj"]
 [ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://camera_rig.gd" id="2_etjlb"]
+[ext_resource type="Script" uid="uid://do5w1w2ln60kr" path="res://ship_collision.gd" id="2_gw35f"]
+[ext_resource type="Shader" uid="uid://cg10u8q58xf10" path="res://outline_shader.gdshader" id="3_gw35f"]
+[ext_resource type="Script" uid="uid://b8akq3bbjnkur" path="res://selection_controller.gd" id="5_hbm4x"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_aq2ne"]
 
@@ -29,7 +32,17 @@ subdivide_depth = 512
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbm4x"]
+render_priority = 0
+shader = ExtResource("3_gw35f")
+shader_parameter/outline_width = 1.08400000399
+shader_parameter/outline_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gw35f"]
+next_pass = SubResource("ShaderMaterial_hbm4x")
+
 [sub_resource type="BoxMesh" id="BoxMesh_7y7d4"]
+material = SubResource("StandardMaterial3D_gw35f")
 
 [node name="WaterMesh" type="MeshInstance3D" unique_id=1040135878]
 mesh = SubResource("PlaneMesh_7y7d4")
@@ -38,15 +51,15 @@ mesh = SubResource("PlaneMesh_7y7d4")
 transform = Transform3D(1, 0, 0, 0, 0.84806406, 0.5298937, 0, -0.5298937, 0.84806406, 0, 0, 0)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1406461982]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.119782686, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7156038, 0)
 physics_material_override = SubResource("PhysicsMaterial_yvhtj")
+gravity_scale = 0.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=2077967570]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.66319036, 0)
 shape = SubResource("BoxShape3D_d6hw4")
+script = ExtResource("2_gw35f")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D" unique_id=1990032901]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6489965, 0)
 mesh = SubResource("BoxMesh_7y7d4")
 
 [node name="CameraRig" type="Node3D" parent="." unique_id=1017615388]
@@ -55,3 +68,8 @@ script = ExtResource("2_etjlb")
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=2085048926]
 transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 0, 0)
+
+[node name="SelectionController" type="Node" parent="." unique_id=356457935]
+script = ExtResource("5_hbm4x")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1331578859]
