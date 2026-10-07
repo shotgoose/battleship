@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://vhw3scn6wf63"]
 
 [ext_resource type="Shader" uid="uid://fqrxw7ri86t7" path="res://water_shader.gdshader" id="1_yvhtj"]
+[ext_resource type="Script" uid="uid://cpluc5pope8en" path="res://selectable.gd" id="2_cn1gj"]
 [ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://camera_rig.gd" id="2_etjlb"]
 [ext_resource type="Script" uid="uid://do5w1w2ln60kr" path="res://ship_collision.gd" id="2_gw35f"]
 [ext_resource type="Shader" uid="uid://cg10u8q58xf10" path="res://outline_shader.gdshader" id="3_gw35f"]
@@ -30,6 +31,12 @@ subdivide_depth = 512
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_yvhtj"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cn1gj"]
+render_priority = 0
+shader = ExtResource("3_gw35f")
+shader_parameter/outline_width = 1.1
+shader_parameter/outline_color = Color(0.8, 0.8, 0.8, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hbm4x"]
@@ -54,6 +61,8 @@ transform = Transform3D(1, 0, 0, 0, 0.84806406, 0.5298937, 0, -0.5298937, 0.8480
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7156038, 0)
 physics_material_override = SubResource("PhysicsMaterial_yvhtj")
 gravity_scale = 0.0
+script = ExtResource("2_cn1gj")
+outline_material = SubResource("ShaderMaterial_cn1gj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=2077967570]
 shape = SubResource("BoxShape3D_d6hw4")
