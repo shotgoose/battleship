@@ -1,28 +1,12 @@
 [gd_scene format=3 uid="uid://bi1socx5xrbum"]
 
-[ext_resource type="Shader" uid="uid://fqrxw7ri86t7" path="res://shaders/water_shader.gdshader" id="1_272bh"]
+[ext_resource type="Material" uid="uid://d0cojj53b6uij" path="res://materials/water.tres" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://cclcuwsl5x17x" path="res://scenes/unit.tscn" id="2_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://dbhi66pfcoqw7" path="res://scenes/controller.tscn" id="4_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cl14q1ivo4k1r" path="res://scenes/camera_rig.tscn" id="5_7mycd"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_aq2ne"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yvhtj"]
-noise = SubResource("FastNoiseLite_aq2ne")
-seamless = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yvhtj"]
-render_priority = 0
-shader = ExtResource("1_272bh")
-shader_parameter/noisemap = SubResource("NoiseTexture2D_yvhtj")
-shader_parameter/wave_height = 1.1
-shader_parameter/normal_offset = 0.01
-shader_parameter/plane_size = 50.0
-shader_parameter/tile = 1.0
-shader_parameter/speed = 0.05
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_7y7d4"]
-material = SubResource("ShaderMaterial_yvhtj")
+material = ExtResource("1_1bvp3")
 size = Vector2(200, 200)
 subdivide_width = 128
 subdivide_depth = 128
@@ -38,6 +22,14 @@ mesh = SubResource("PlaneMesh_7y7d4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0766153, 0)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1331578859]
+
+[node name="PanelContainer" type="PanelContainer" parent="UI" unique_id=330740269]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
 
 [node name="CameraRig" parent="." unique_id=1829092561 instance=ExtResource("5_7mycd")]
 
