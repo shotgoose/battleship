@@ -34,6 +34,7 @@ next_pass = SubResource("ShaderMaterial_hbm4x")
 material = SubResource("StandardMaterial3D_gw35f")
 
 [node name="Unit" type="RigidBody3D" unique_id=700282534]
+collision_layer = 2
 physics_material_override = SubResource("PhysicsMaterial_yvhtj")
 gravity_scale = 0.0
 script = ExtResource("1_k673f")
