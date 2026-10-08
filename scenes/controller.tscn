@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dbhi66pfcoqw7"]
+
+[ext_resource type="Script" uid="uid://qoqrogehayxw" path="res://scripts/controller.gd" id="1_60fnl"]
+
+[node name="Controller" type="Node" unique_id=629880235]
+script = ExtResource("1_60fnl")

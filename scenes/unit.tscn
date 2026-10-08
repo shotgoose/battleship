@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cclcuwsl5x17x"]
+
+[ext_resource type="Script" uid="uid://ceeo25ryo5eki" path="res://scripts/unit.gd" id="1_k673f"]
+[ext_resource type="Shader" uid="uid://cg10u8q58xf10" path="res://shaders/outline_shader.gdshader" id="2_1jvru"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_yvhtj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
+
+[sub_resource type="GDScript" id="GDScript_1bvp3"]
+script/source = "extends CollisionShape3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbm4x"]
+render_priority = 0
+shader = ExtResource("2_1jvru")
+shader_parameter/outline_width = 1.08400000399
+shader_parameter/outline_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gw35f"]
+next_pass = SubResource("ShaderMaterial_hbm4x")
+
+[sub_resource type="BoxMesh" id="BoxMesh_7y7d4"]
+material = SubResource("StandardMaterial3D_gw35f")
+
+[node name="Unit" type="RigidBody3D" unique_id=700282534]
+physics_material_override = SubResource("PhysicsMaterial_yvhtj")
+gravity_scale = 0.0
+script = ExtResource("1_k673f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1118610132]
+shape = SubResource("BoxShape3D_d6hw4")
+script = SubResource("GDScript_1bvp3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=875300556]
+mesh = SubResource("BoxMesh_7y7d4")

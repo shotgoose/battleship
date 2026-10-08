@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://cl14q1ivo4k1r"]
 
-[ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://camera_rig/main.gd" id="1_mg55j"]
-[ext_resource type="Shader" uid="uid://dh556xpn2cfsr" path="res://shaders/sky_shader.gdshader" id="2_dhubn"]
+[ext_resource type="Script" uid="uid://dfbuk8jt2h17a" path="res://scripts/camera_rig.gd" id="1_hro8h"]
+[ext_resource type="Shader" uid="uid://dh556xpn2cfsr" path="res://shaders/sky_shader.gdshader" id="2_kelou"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_allc3"]
-shader = ExtResource("2_dhubn")
+shader = ExtResource("2_kelou")
 
 [sub_resource type="Sky" id="Sky_nh27e"]
 sky_material = SubResource("ShaderMaterial_allc3")
@@ -15,7 +15,7 @@ sky = SubResource("Sky_nh27e")
 adjustment_enabled = true
 
 [node name="CameraRig" type="Node3D" unique_id=1829092561]
-script = ExtResource("1_mg55j")
+script = ExtResource("1_hro8h")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2120624030]
 environment = SubResource("Environment_allc3")
