@@ -2,8 +2,8 @@ class_name PathPreview
 extends MultiMeshInstance3D
 
 const DASH_HEIGHT := 0.02
-const DASH_WIDTH := .08
-const DASH_LENGTH := 0.1
+const DASH_WIDTH := .12
+const DASH_LENGTH := 0.3
 const DASH_OFFSET := 1
 const MAX_DASHES := 256
 
