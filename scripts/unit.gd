@@ -5,7 +5,7 @@ extends CharacterBody3D
 
 var is_selected : bool = false
 var is_hovered : bool = false
-var waypoints : Array[Vector2] = []
+var planned_path := PackedVector2Array()
 
 const OUTLINE_HOVER := preload("res://materials/outline_hover.tres")
 const OUTLINE_SELECT := preload("res://materials/outline_select.tres")
@@ -19,12 +19,6 @@ func set_selected(value: bool) -> void:
 func set_hovered(value: bool) -> void:
 	is_hovered = value
 	_update_outline()
-	
-func add_waypoint(destination : Vector2) -> void:
-	waypoints.append(destination)
-
-func clear_waypoints() -> void:
-	waypoints.clear()
 
 func pathfind() -> void:
 	pass

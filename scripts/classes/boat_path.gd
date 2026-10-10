@@ -20,5 +20,25 @@ static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: floa
 		if len < best_len:
 			best_len = len
 			best = _sample(c, radius, start_angle, sweep, s, target, step)
-	return PackedVector2Array();
+	return best;
+	
+static func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: float, target: Vector2, step: float) -> PackedVector2Array:
+	var path = PackedVector2Array()
+	var circle_steps := int(sweep * radius / step)
+	var rad_step := s * step / radius
+	
+	for i in circle_steps:
+		var point : Vector2 = c + Vector2.from_angle(start_angle + rad_step * i) * radius
+		path.append(point)
+		
+	var exit_point := c + Vector2.from_angle(start_angle + s * sweep) * radius
+	var line_steps := int(exit_point.distance_to(target) / step)
+	var line_dir = (target - exit_point).normalized()
+	
+	for i in line_steps:
+		var point : Vector2 = exit_point + line_dir * step * i
+		path.append(point)
+		
+	path.append(target)
+	return path
 		
