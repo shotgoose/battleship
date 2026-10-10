@@ -1,6 +1,12 @@
 [gd_scene format=3 uid="uid://cclcuwsl5x17x"]
 
 [ext_resource type="Script" uid="uid://ceeo25ryo5eki" path="res://scripts/unit.gd" id="1_k673f"]
+[ext_resource type="Script" uid="uid://bagof5kw82ppa" path="res://scripts/classes/unit_stats.gd" id="2_1jvru"]
+[ext_resource type="Script" uid="uid://xgkk47rnmtv4" path="res://scripts/path_preview.gd" id="2_k673f"]
+
+[sub_resource type="Resource" id="Resource_1bvp3"]
+script = ExtResource("2_1jvru")
+metadata/_custom_type_script = "uid://bagof5kw82ppa"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
 
@@ -23,6 +29,7 @@ func _process(delta: float) -> void:
 [node name="CharacterBody3D" type="CharacterBody3D" unique_id=458135210]
 collision_layer = 2
 script = ExtResource("1_k673f")
+stats = SubResource("Resource_1bvp3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1118610132]
 shape = SubResource("BoxShape3D_d6hw4")
@@ -32,3 +39,8 @@ script = SubResource("GDScript_1bvp3")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Model" unique_id=875300556]
 mesh = SubResource("BoxMesh_7y7d4")
+
+[node name="PathPreview" type="MultiMeshInstance3D" parent="." unique_id=66501851]
+unique_name_in_owner = true
+top_level = true
+script = ExtResource("2_k673f")

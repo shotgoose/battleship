@@ -5,15 +5,18 @@ const GROUND_LAYER := 1 << 0 # layer 1
 
 var selected_unit: Node;
 var hovered_unit: Node;
+var preview_path: PackedVector2Array;
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("select"):
 		_handle_select()
 	if event.is_action_pressed("command"):
 		_handle_command()
+	if event is InputEventMouseMotion:
+		_handle_path()
 
 func _process(delta) -> void:
-	_handle_hover();
+	_handle_hover()
 
 func _raycast(mask: int) -> Dictionary:
 	var camera := get_viewport().get_camera_3d()
@@ -41,6 +44,16 @@ func _handle_hover() -> void:
 		
 func _handle_command() -> void:
 	pass
+	
+func _handle_path() -> void:
+	var hit := _raycast(GROUND_LAYER)
+	if hit.is_empty():
+		return
+	var pos : Vector3 = hit.position
+	var target := Vector2(pos.x, pos.z)
+	if is_instance_valid(selected_unit):
+		preview_path = BoatPath.plan(selected_unit.ground_position, selected_unit.heading, target, selected_unit.stats.turn_radius)
+		selected_unit.draw_path(preview_path)
 		
 func select_unit(unit: Node) -> void:
 	selected_unit = unit
