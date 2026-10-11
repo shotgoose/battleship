@@ -10,20 +10,6 @@ metadata/_custom_type_script = "uid://bagof5kw82ppa"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
 
-[sub_resource type="GDScript" id="GDScript_1bvp3"]
-script/source = "extends CollisionShape3D
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-"
-
 [sub_resource type="BoxMesh" id="BoxMesh_7y7d4"]
 
 [node name="CharacterBody3D" type="CharacterBody3D" unique_id=458135210]
@@ -33,7 +19,6 @@ stats = SubResource("Resource_1bvp3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1118610132]
 shape = SubResource("BoxShape3D_d6hw4")
-script = SubResource("GDScript_1bvp3")
 
 [node name="Model" type="Node3D" parent="." unique_id=1457920884]
 

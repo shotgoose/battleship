@@ -11,6 +11,7 @@ const PATH_INACTIVE = preload("res://materials/path_inactive.tres")
 var is_selected : bool = false
 var is_hovered : bool = false
 var planned_path := Array(PackedVector2Array())
+var predicted_path := Array(PackedVector2Array())
 
 @onready var path_preview: PathPreview = %PathPreview
 
@@ -53,10 +54,8 @@ func set_hovered(value: bool) -> void:
 func draw_path(preview_path:= PackedVector2Array()) -> void:
 	var merged_path = PackedVector2Array()
 	for path in planned_path:
-		for vector in path:
-			merged_path.append(vector)
-	for vector in preview_path:
-		merged_path.append(vector)
+		merged_path.append_array(path)
+	merged_path.append_array(preview_path)
 	path_preview.draw_path(merged_path)
 	
 func clear_path() -> void:
