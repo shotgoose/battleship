@@ -24,7 +24,7 @@ static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: floa
 	
 static func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: float, target: Vector2, step: float) -> PackedVector2Array:
 	var path = PackedVector2Array()
-	var circle_steps := int(sweep * radius / step)
+	var circle_steps := int(sweep * radius / step) + 1
 	var rad_step := s * step / radius
 	
 	for i in circle_steps:
@@ -32,7 +32,7 @@ static func _sample(c: Vector2, radius: float, start_angle: float, sweep: float,
 		path.append(point)
 		
 	var exit_point := c + Vector2.from_angle(start_angle + s * sweep) * radius
-	var line_steps := int(exit_point.distance_to(target) / step)
+	var line_steps := int(exit_point.distance_to(target) / step) + 1
 	var line_dir = (target - exit_point).normalized()
 	
 	for i in line_steps:

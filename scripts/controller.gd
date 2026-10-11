@@ -7,13 +7,39 @@ var selected_unit: Node;
 var hovered_unit: Node;
 var preview_path: PackedVector2Array;
 
+enum InputMode {
+	basic,
+	charting,
+}
+
+var input_mode : InputMode
+
+func _ready() -> void:
+	input_mode = InputMode.basic
+
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("select"):
-		_handle_select()
-	if event.is_action_pressed("command"):
-		_handle_command()
-	if event is InputEventMouseMotion:
-		_handle_path()
+	match input_mode:
+		InputMode.basic:
+			if event.is_action_pressed("select"):
+				_handle_select_unit()
+			if event.is_action_pressed("chart"):
+				if is_instance_valid(selected_unit):
+					input_mode = InputMode.charting
+					_handle_path_update()
+		InputMode.charting:
+			if event.is_action_pressed("select"):
+				_handle_path_select()
+			if event.is_action_pressed("alt select"):
+				selected_unit.delete_path(-1)
+				_handle_path_update()
+			if event.is_action_pressed("reset"):
+				selected_unit.clear_path()
+				_handle_path_update()
+			if event is InputEventMouseMotion:
+				_handle_path_update()
+			if event.is_action_pressed("chart"):
+				input_mode = InputMode.basic
+				selected_unit.draw_path()
 
 func _process(delta) -> void:
 	_handle_hover()
@@ -26,49 +52,58 @@ func _raycast(mask: int) -> Dictionary:
 	var to := from + camera.project_ray_normal(mouse_pos) * 1000.0
 	var query := PhysicsRayQueryParameters3D.create(from, to, mask)
 	return camera.get_world_3d().direct_space_state.intersect_ray(query)
-	
-func _handle_select() -> void:
-	var hit := _raycast(UNIT_LAYER)
-	clear_selection()
-	if hit:
-		select_unit(hit.collider)
-	
+
+func _handle_select_unit() -> void:
+	match input_mode:
+		InputMode.basic:
+			var hit := _raycast(UNIT_LAYER)
+			_clear_selection()
+			if hit:
+				_select_unit(hit.collider)
+		InputMode.charting:
+			pass
+
 func _handle_hover() -> void:
 	var hit := _raycast(UNIT_LAYER)
 	var unit = hit.collider if hit else null
 	if unit == hovered_unit:
 		return
-	clear_hover()
+	_clear_hover()
 	if unit:
-		hover_unit(unit)
+		_hover_unit(unit)
+
+func _handle_path_update() -> void:
+	selected_unit.draw_path(_get_path())
 		
-func _handle_command() -> void:
-	pass
-	
-func _handle_path() -> void:
-	var hit := _raycast(GROUND_LAYER)
-	if hit.is_empty():
-		return
-	var pos : Vector3 = hit.position
-	var target := Vector2(pos.x, pos.z)
-	if is_instance_valid(selected_unit):
-		preview_path = BoatPath.plan(selected_unit.ground_position, selected_unit.heading, target, selected_unit.stats.turn_radius)
-		selected_unit.draw_path(preview_path)
-		
-func select_unit(unit: Node) -> void:
+func _handle_path_select() -> void:
+	var path := _get_path()
+	if path.size() > 0:
+		selected_unit.add_path(path)
+
+func _select_unit(unit: Node) -> void:
 	selected_unit = unit
 	unit.set_selected(true)
 	
-func hover_unit(unit: Node) -> void:
+func _get_path() -> PackedVector2Array:
+	var hit := _raycast(GROUND_LAYER)
+	if hit.is_empty():
+		return PackedVector2Array()
+	var pos : Vector3 = hit.position
+	var target := Vector2(pos.x, pos.z)
+	if is_instance_valid(selected_unit):
+		return BoatPath.plan(selected_unit.start, selected_unit.start_heading, target, selected_unit.stats.turn_radius)
+	return PackedVector2Array()
+
+func _hover_unit(unit: Node) -> void:
 	hovered_unit = unit
 	unit.set_hovered(true)
-	
-func clear_selection() -> void:
+
+func _clear_selection() -> void:
 	if is_instance_valid(selected_unit):
 		selected_unit.set_selected(false)
 	selected_unit = null
-		
-func clear_hover() -> void:
+
+func _clear_hover() -> void:
 	if is_instance_valid(hovered_unit):
 		hovered_unit.set_hovered(false)
 	hovered_unit = null
