@@ -37,7 +37,7 @@ func draw_markers(full_path: Array[BoatPath], r: TravelRange, f: bool) -> void:
 	var dist := 0.0
 	for i in markers:
 		var point := full_path[i].get_point(-1)
-		dist += full_path[i].get_dist(-1)
+		dist += full_path[i].length()
 		multimesh.set_instance_transform(i, Transform3D(Basis(), Vector3(point.x, CROSS_OFFSET, point.y)))
 		multimesh.set_instance_color(i, _color_for(dist, r, f))
 	multimesh.visible_instance_count = markers

@@ -10,8 +10,11 @@ func _init(low: float, high: float):
 	min_value = low
 	max_value = high
 
-func contains(num: float):
+func contains(num: float) -> bool:
 	return num >= min_value and num <= max_value
 	
-func clamp_value(num: float):
+func within_range(num: float) -> bool:
+	return num <= max_value
+	
+func clamp_value(num: float) -> float:
 	return clamp(num, min_value, max_value)

@@ -11,6 +11,7 @@ func enter() -> void:
 	
 func exit() -> void:
 	if is_instance_valid(controller.selected_unit):
+		controller.selected_unit.verify_path()
 		controller.selected_unit.draw_path()
 
 func update(_delta: float) -> void:

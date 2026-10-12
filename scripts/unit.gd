@@ -9,10 +9,16 @@ const OUTLINE_SELECT := preload("res://materials/outline_select.tres")
 var is_selected : bool = false
 var is_hovered : bool = false
 var planned_path : Array[BoatPath]
-var predicted_path : Array[BoatPath]
+var speed: float = 50
+var type: UnitType = UnitType.ALLY
 
 @onready var path_preview: PathPreview = %PathPreview
 @onready var path_waypoints: PathWaypoints = %PathWaypoints
+
+enum UnitType {
+	ALLY,
+	ENEMY,
+}
 
 var ground_position: Vector2:
 	get: return Vector2(global_position.x, global_position.z)
@@ -35,8 +41,6 @@ var start_heading: Vector2:
 			return planned_path[-1].get_dir(-1)
 		else:
 			return heading
-			
-var speed: float
 
 var turn_radius: float:
 	get:
@@ -47,6 +51,13 @@ var travel_range: TravelRange:
 		var min_val = maxf(0.0, speed - stats.max_deceleration)
 		var max_val = minf(stats.top_speed, speed + stats.max_acceleration)
 		return TravelRange.new(min_val, max_val)
+		
+var planned_range: float:
+	get:
+		var dist = 0.0
+		for path in planned_path:
+			dist += path.length()
+		return dist
 
 @onready var model : Node3D = $Model
 
@@ -74,11 +85,16 @@ func draw_path(preview_path := BoatPath.new()) -> void:
 func clear_path() -> void:
 	planned_path.clear()
 
-func add_path(path: BoatPath):
-	planned_path.append(path)
+func add_path(path: BoatPath) -> void:
+	if travel_range.within_range(planned_range + path.length()):
+		planned_path.append(path)
 
-func delete_path(index: int):
+func delete_path(index: int) -> void:
 	planned_path.pop_at(index)
+	
+func verify_path() -> void:
+	if !travel_range.contains(planned_range):
+		clear_path()
 
 func _update_outline() -> void:
 	var mat : Material = null
