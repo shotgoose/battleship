@@ -26,9 +26,9 @@ static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: floa
 		var sweep := fposmod((exit_angle - start_angle) * s, TAU)
 		if sweep > TAU - 0.001:
 			sweep = 0.0
-		var length := sweep * radius + exit_point.distance_to(target)
-		if length < best_len:
-			best_len = length
+		var leng := sweep * radius + exit_point.distance_to(target)
+		if leng < best_len:
+			best_len = leng
 			best_c = c
 			best_start_angle = start_angle
 			best_sweep = sweep

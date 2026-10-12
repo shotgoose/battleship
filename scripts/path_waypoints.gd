@@ -4,9 +4,9 @@ extends MultiMeshInstance3D
 const MAT = preload("res://materials/path.tres")
 
 const MAX_MARKERS := 64
-const ARM_WIDTH := .12
-const ARM_LENGTH := 0.6
-const CROSS_HEIGHT := 0.02
+const ARM_WIDTH := .2
+const ARM_LENGTH := 1
+const CROSS_HEIGHT := 0.03
 const CROSS_OFFSET := 1.1
 
 const COLOR_OK := Color(0.2, 0.9, 0.3)
@@ -34,11 +34,12 @@ func _ready() -> void:
 
 func draw_markers(full_path: Array[BoatPath], r: TravelRange, f: bool) -> void:
 	var markers = min(full_path.size(), MAX_MARKERS)
+	var dist := 0.0
 	for i in markers:
-		var last_point := full_path[i].get_point(-1)
-		var last_dist := full_path[i].get_dist(-1)
-		multimesh.set_instance_transform(i, Transform3D(Basis(), Vector3(last_point.x, CROSS_OFFSET, last_point.y)))
-		multimesh.set_instance_color(i, _color_for(last_dist, r, f))
+		var point := full_path[i].get_point(-1)
+		dist += full_path[i].get_dist(-1)
+		multimesh.set_instance_transform(i, Transform3D(Basis(), Vector3(point.x, CROSS_OFFSET, point.y)))
+		multimesh.set_instance_color(i, _color_for(dist, r, f))
 	multimesh.visible_instance_count = markers
 
 func _color_for(dist: float, r: TravelRange, f: bool) -> Color:
