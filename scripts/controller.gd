@@ -40,15 +40,15 @@ func get_unit_at_cursor() -> Unit:
 		return null
 	return hit.collider
 		
-func get_path_to_cursor() -> PackedVector2Array:
+func get_path_to_cursor() -> BoatPath:
 	var hit := _raycast(GROUND_LAYER)
 	if hit.is_empty():
-		return PackedVector2Array()
+		return null
 	var pos : Vector3 = hit.position
 	var target := Vector2(pos.x, pos.z)
 	if is_instance_valid(selected_unit):
-		return BoatPath.plan(selected_unit.start, selected_unit.start_heading, target, selected_unit.stats.turn_radius)
-	return PackedVector2Array()
+		return BoatPath.plan(selected_unit.start, selected_unit.start_heading, target, selected_unit.turn_radius)
+	return null
 	
 func select_unit(unit: Node) -> void:
 	selected_unit = unit

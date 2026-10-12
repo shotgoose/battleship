@@ -3,9 +3,11 @@
 [ext_resource type="Script" uid="uid://ceeo25ryo5eki" path="res://scripts/unit.gd" id="1_k673f"]
 [ext_resource type="Script" uid="uid://bagof5kw82ppa" path="res://scripts/classes/unit_stats.gd" id="2_1jvru"]
 [ext_resource type="Script" uid="uid://xgkk47rnmtv4" path="res://scripts/path_preview.gd" id="2_k673f"]
+[ext_resource type="Script" uid="uid://cnpfl7ia8qybl" path="res://scripts/path_waypoints.gd" id="4_gic7v"]
 
 [sub_resource type="Resource" id="Resource_1bvp3"]
 script = ExtResource("2_1jvru")
+base_turn_radius = 10.0
 metadata/_custom_type_script = "uid://bagof5kw82ppa"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d6hw4"]
@@ -29,3 +31,7 @@ mesh = SubResource("BoxMesh_7y7d4")
 unique_name_in_owner = true
 top_level = true
 script = ExtResource("2_k673f")
+
+[node name="PathWaypoints" type="MultiMeshInstance3D" parent="PathPreview" unique_id=1876295895]
+unique_name_in_owner = true
+script = ExtResource("4_gic7v")

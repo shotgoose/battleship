@@ -3,7 +3,7 @@ extends InputState
 
 var _last_mouse := Vector2.INF
 var _last_cam_xform := Transform3D()
-var _preview: PackedVector2Array
+var _preview: BoatPath
 
 func enter() -> void:
 	controller.clear_hover()

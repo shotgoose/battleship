@@ -5,15 +5,14 @@ extends CharacterBody3D
 
 const OUTLINE_HOVER := preload("res://materials/outline_hover.tres")
 const OUTLINE_SELECT := preload("res://materials/outline_select.tres")
-const PATH_ACTIVE = preload("res://materials/path_active.tres")
-const PATH_INACTIVE = preload("res://materials/path_inactive.tres")
 
 var is_selected : bool = false
 var is_hovered : bool = false
-var planned_path := Array(PackedVector2Array())
-var predicted_path := Array(PackedVector2Array())
+var planned_path : Array[BoatPath]
+var predicted_path : Array[BoatPath]
 
 @onready var path_preview: PathPreview = %PathPreview
+@onready var path_waypoints: PathWaypoints = %PathWaypoints
 
 var ground_position: Vector2:
 	get: return Vector2(global_position.x, global_position.z)
@@ -26,42 +25,56 @@ var heading: Vector2:
 var start: Vector2:
 	get:
 		if planned_path.size() > 0:
-			return planned_path[-1].get(planned_path[-1].size() - 1)
+			return planned_path[-1].get_point(-1)
 		else:
 			return ground_position
 			
 var start_heading: Vector2:
 	get:
 		if planned_path.size() > 0:
-			var last_vector: Vector2 = planned_path[-1].get(planned_path[-1].size() - 1)
-			var second_to_last_vector : Vector2 = planned_path[-1].get(planned_path[-1].size() - 2)
-			return (last_vector - second_to_last_vector).normalized()
+			return planned_path[-1].get_dir(-1)
 		else:
 			return heading
+			
+var speed: float
+
+var turn_radius: float:
+	get:
+		return stats.base_turn_radius + speed * stats.turn_radius_speed_coeff
+
+var travel_range: TravelRange:
+	get:
+		var min_val = maxf(0.0, speed - stats.max_deceleration)
+		var max_val = minf(stats.top_speed, speed + stats.max_acceleration)
+		return TravelRange.new(min_val, max_val)
 
 @onready var model : Node3D = $Model
 
 func set_selected(value: bool) -> void:
 	is_selected = value
 	_update_outline()
-	_update_path_focus()
+	draw_path()
 	
 func set_hovered(value: bool) -> void:
 	is_hovered = value
 	_update_outline()
-	_update_path_focus()
 	
-func draw_path(preview_path:= PackedVector2Array()) -> void:
-	var merged_path = PackedVector2Array()
+func draw_path(preview_path := BoatPath.new()) -> void:
+	var full_path : Array[BoatPath]
+	var merged_path := BoatPath.new()
 	for path in planned_path:
-		merged_path.append_array(path)
-	merged_path.append_array(preview_path)
-	path_preview.draw_path(merged_path)
+		full_path.append(path as BoatPath)
+		merged_path.append_path(path)
+	if preview_path.size() > 0:
+		full_path.append(preview_path as BoatPath)
+		merged_path.append_path(preview_path)
+	path_preview.draw_path(merged_path, travel_range, is_selected)
+	path_waypoints.draw_markers(full_path, travel_range, is_selected)
 	
 func clear_path() -> void:
 	planned_path.clear()
 
-func add_path(path: PackedVector2Array):
+func add_path(path: BoatPath):
 	planned_path.append(path)
 
 func delete_path(index: int):
@@ -75,11 +88,3 @@ func _update_outline() -> void:
 		mat = OUTLINE_HOVER
 	for mesh in model.find_children("*", "MeshInstance3D", true, false):
 		mesh.material_overlay = mat
-		
-func _update_path_focus() -> void:
-	var mat : Material = null
-	if is_selected:
-		mat = PATH_ACTIVE
-	else:
-		mat = PATH_INACTIVE
-	$PathPreview.material_override = mat
