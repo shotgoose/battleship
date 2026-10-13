@@ -35,9 +35,10 @@ func _ready() -> void:
 func draw_markers(path: BoatPath, r: TravelRange, f: bool) -> void:
 	var markers = min(path.waypoints_size(), MAX_MARKERS)
 	for i in markers:
-		var point = path.get_waypoint(i)
+		var j = path.get_waypoint(i)
+		var point = path.get_point(j)
 		multimesh.set_instance_transform(i, Transform3D(Basis(), Vector3(point.x, CROSS_OFFSET, point.y)))
-		multimesh.set_instance_color(i, _color_for(path.get_dist_at(point), r, f))
+		multimesh.set_instance_color(i, _color_for(path.get_dist(j), r, f))
 	multimesh.visible_instance_count = markers
 
 func _color_for(dist: float, r: TravelRange, f: bool) -> Color:

@@ -32,10 +32,10 @@ func update(_delta: float) -> void:
 
 func handle_input(event: InputEvent) -> void:
 	if event.is_action_pressed("select"):
-		if _preview.size() > 0:
+		if _preview.base() > 0:
 			controller.selected_unit.add_path(_preview)
 	if event.is_action_pressed("alt select"):
-		controller.selected_unit.delete_path(-1)
+		controller.selected_unit.delete_path()
 		_invalidate()
 	if event.is_action_pressed("reset"):
 		controller.selected_unit.clear_path()

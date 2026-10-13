@@ -27,7 +27,7 @@ func _ready() -> void:
 	material_override = MAT
 
 func draw_path(path: BoatPath, r: TravelRange, f: bool) -> void:
-	var dashes = min(path.size(), MAX_DASHES)
+	var dashes = min(path.base(), MAX_DASHES)
 	for i in dashes:
 		multimesh.set_instance_transform(i, _dash_transform(path.get_point(i), path.get_dir(i)))
 		multimesh.set_instance_color(i, _color_for(path.get_dist(i), r, f))

@@ -4,7 +4,7 @@ extends RefCounted
 var points := PackedVector2Array()
 var dists := PackedFloat32Array() # dists[i] = arc length from points[0] to points[i]
 var dirs := PackedVector2Array() # dirs[i] = vector pointing from points[i] to points[i + 1]
-var waypoints := PackedVector2Array()
+var waypoints := PackedInt32Array() # index i of waypoints
 
 static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: float, step := 0.5) -> BoatPath:
 	var result := BoatPath.new()
@@ -40,7 +40,6 @@ static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: floa
 	return result
 
 func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: float, target: Vector2, step: float) -> void:
-	waypoints.append(target)
 	var arc_steps := int(sweep * radius / step)
 	var rad_step := s * step / radius
 	for i in arc_steps:
@@ -54,8 +53,9 @@ func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: flo
 		_push(exit_point + dir * step * i, dir)
 	if points[-1].distance_to(target) > 0.001:
 		_push(target, dir)
+	waypoints.append(points.size() - 1)
 
-func _push(point: Vector2, dir: Vector2) -> void:
+func _push(point: Vector2, dir: Vector2):
 	var dist := 0.0
 	if points.size() > 0:
 		dist = dists[-1] + points[-1].distance_to(point)
@@ -69,7 +69,7 @@ func is_empty() -> bool:
 func length() -> float:
 	return 0.0 if dists.is_empty() else dists[-1]
 	
-func size() -> int:
+func base() -> int:
 	return points.size()
 	
 func waypoints_size() -> int:
@@ -84,19 +84,7 @@ func get_dist(index: int) -> float:
 func get_dir(index: int) -> Vector2:
 	return dirs[index]
 	
-func get_dist_at(point: Vector2) -> float:
-	var i = points.bsearch(point)
-	if i == -1:
-		return 0
-	return dists[i]
-	
-func get_dir_at(point: Vector2) -> Vector2:
-	var i = points.bsearch(point)
-	if i == -1:
-		return Vector2.ZERO
-	return dirs[i]
-	
-func get_waypoint(index: int) -> Vector2:
+func get_waypoint(index: int) -> int:
 	return waypoints[index]
 	
 func end_point() -> Vector2:
@@ -109,6 +97,7 @@ func append_path(other: BoatPath) -> void:
 	if other == null or other.is_empty():
 		return
 	var offset := length()
+	var size := base()
 	var first := 0
 	if not is_empty() and points[-1].is_equal_approx(other.points[0]):
 		first = 1  # skip the duplicated join point
@@ -117,15 +106,16 @@ func append_path(other: BoatPath) -> void:
 		dists.append(offset + other.dists[i])
 		dirs.append(other.dirs[i])
 	for i in other.waypoints.size():
-		waypoints.append(other.waypoints[i])
+		waypoints.append(size + other.waypoints[i] - first)
 		
-func remove_path_to(target: Vector2) -> void:
-	var i = points.bsearch(target)
-	var j = waypoints.bsearch(target)
-	if i == -1 or j == -1:
+func remove_path() -> void:
+	if waypoints.is_empty():
 		return
-	points = points.slice(i)
-	waypoints = waypoints.slice(j)
+	waypoints.remove_at(waypoints.size() - 1)
+	var keep := 0 if waypoints.is_empty() else waypoints[-1] + 1
+	points = points.slice(0, keep)
+	dists = dists.slice(0, keep)
+	dirs = dirs.slice(0, keep)
 	
 func clear() -> void:
 	points.clear()

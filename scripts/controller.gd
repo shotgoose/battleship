@@ -74,8 +74,7 @@ func clear_hover() -> void:
 func set_state(new_state: InputState) -> void:
 	if new_state == input_state:
 		return
-	var old = input_state
-	input_state = new_state
-	if old:
+	if input_state:
 		input_state.exit()
+	input_state = new_state
 	new_state.enter()

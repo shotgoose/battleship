@@ -30,14 +30,14 @@ var heading: Vector2:
 		
 var start: Vector2:
 	get:
-		if planned_path.size() > 0:
+		if planned_path.base() > 0:
 			return planned_path.get_point(-1)
 		else:
 			return ground_position
 			
 var start_heading: Vector2:
 	get:
-		if planned_path.size() > 0:
+		if planned_path.base() > 0:
 			return planned_path.get_dir(-1)
 		else:
 			return heading
@@ -68,7 +68,7 @@ func set_hovered(value: bool) -> void:
 	_update_outline()
 	
 func draw_path(preview_path := BoatPath.new()) -> void:
-	var preview = planned_path.append_new(preview_path)
+	var preview = planned_path.append_new(preview_path) if not preview_path.is_empty() else planned_path
 	path_preview.draw_path(preview, travel_range, is_selected)
 	path_waypoints.draw_markers(preview, travel_range, is_selected)
 	
@@ -79,8 +79,8 @@ func add_path(path: BoatPath) -> void:
 	if travel_range.within_range(planned_range + path.length()):
 		planned_path.append_path(path)
 
-func delete_path(index: int) -> void:
-	planned_path.remove_path_to(planned_path.get_waypoint(index))
+func delete_path() -> void:
+	planned_path.remove_path()
 	
 func verify_path() -> void:
 	if not travel_range.contains(planned_range):
