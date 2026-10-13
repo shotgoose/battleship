@@ -13,6 +13,8 @@ func handle_input(event: InputEvent):
 	if event.is_action_pressed("chart"):
 		if is_instance_valid(controller.selected_unit):
 			controller.set_state(controller.charting_state)
+	if event.is_action_pressed("ready"):
+		controller.set_state(controller.ready_state)
 
 func _handle_select_unit() -> void:
 	controller.clear_selection()

@@ -13,10 +13,13 @@ var preview_path: PackedVector2Array;
 var input_state: InputState
 var basic_state: InputState
 var charting_state: InputState
+var ready_state: InputState
 
 func _ready() -> void:
 	basic_state = BasicState.new(self)
 	charting_state = ChartingState.new(self)
+	ready_state = ReadyState.new(self)
+	player = Player.new(1, Color(0,0,0))
 	
 	set_state(basic_state)
 
