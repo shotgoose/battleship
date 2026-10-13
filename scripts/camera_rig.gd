@@ -1,6 +1,5 @@
 extends Node3D
-## enums
-## consts
+
 const CAMERA_PAN_SPEED : float = 5;
 const CAMERA_ROTATE_SPEED : float = PI / 2;
 const CAMERA_ARC_RADIUS : float = 10;
@@ -10,15 +9,12 @@ const MAX_ANGLE : float = - PI / 16;
 const START_ANGLE : float = - PI / 6;
 const HEIGHT_PER_RAD : float = 20;
 const CAMERA_PAN_SPEED_HEIGHT_COEFF : float = 0.2;
-## exports
-## public vars
-## private vars
+
 var _movement_input : Vector2 = Vector2.ZERO;
 var _rotation_input : float = 0;
 var _zoom_input : int = 0;
-## onready vars
+
 @onready var camera : Camera3D = $Camera3D;
-## built-in override functions
 
 func _ready() -> void:
 	camera.rotation.x = START_ANGLE;

@@ -71,16 +71,12 @@ func set_hovered(value: bool) -> void:
 	_update_outline()
 	
 func draw_path(preview_path := BoatPath.new()) -> void:
-	var full_path : Array[BoatPath]
-	var merged_path := BoatPath.new()
-	for path in planned_path:
-		full_path.append(path as BoatPath)
-		merged_path.append_path(path)
-	if preview_path.size() > 0:
-		full_path.append(preview_path as BoatPath)
-		merged_path.append_path(preview_path)
+	var merged_path = BoatPath.merge(planned_path)
+	var markers = BoatPath.find_markers(planned_path)
+	merged_path.append_path(preview_path)
+	markers.append_marker(preview_path)
 	path_preview.draw_path(merged_path, travel_range, is_selected)
-	path_waypoints.draw_markers(full_path, travel_range, is_selected)
+	path_waypoints.draw_markers(markers, travel_range, is_selected)
 	
 func clear_path() -> void:
 	planned_path.clear()

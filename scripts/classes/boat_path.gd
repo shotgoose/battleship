@@ -37,6 +37,20 @@ static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: floa
 	if best_len < INF:
 		result._sample(best_c, radius, best_start_angle, best_sweep, best_s, target, step)
 	return result
+	
+static func merge(array: Array[BoatPath]) -> BoatPath:
+	var merged = BoatPath.new()
+	for path in array:
+		merged.append_path(path)
+	return merged
+	
+static func find_markers(array: Array[BoatPath]) -> BoatPath:
+	var m := BoatPath.new()
+	var dist := 0.0
+	for path in array:
+		dist += path.get_dist(-1)
+		m._append(path.get_point(-1), dist, Vector2.ZERO)
+	return m
 
 func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: float, target: Vector2, step: float) -> void:
 	var arc_steps := int(sweep * radius / step)
@@ -57,6 +71,11 @@ func _push(point: Vector2, dir: Vector2) -> void:
 	var dist := 0.0
 	if points.size() > 0:
 		dist = dists[-1] + points[-1].distance_to(point)
+	points.append(point)
+	dists.append(dist)
+	dirs.append(dir)
+	
+func _append(point: Vector2, dist: float, dir: Vector2) -> void:
 	points.append(point)
 	dists.append(dist)
 	dirs.append(dir)
@@ -90,3 +109,11 @@ func append_path(other: BoatPath) -> void:
 		points.append(other.points[i])
 		dists.append(offset + other.dists[i])
 		dirs.append(other.dirs[i])
+		
+func append_marker(other: BoatPath) -> void:
+	if other == null or other.is_empty():
+		return
+	var dist = other.get_dist(-1) + dists[-1] if !dists.is_empty() else other.get_dist(-1)
+	points.append(other.get_point(-1))
+	dists.append(dist)
+	dirs.append(Vector2.ZERO)
