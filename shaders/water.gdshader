@@ -39,6 +39,6 @@ void fragment() {
 	float fresnel = 1.0 - dot(NORMAL, VIEW);
 	ALBEDO = mix(vec3(0.005, 0.04, 0.03), vec3(0.05, 0.07, 0.15), fresnel);
 	ROUGHNESS = 0.0;
-	RIM = 0.2;
+	RIM = 0.4;
 	METALLIC = 0.3;
 }

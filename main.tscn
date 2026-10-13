@@ -40,6 +40,8 @@ grow_vertical = 0
 
 [node name="Controller" parent="." unique_id=629880235 instance=ExtResource("4_lquwl")]
 
+[node name="StateManager" type="Node" parent="." unique_id=994780]
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=201992766]
 transform = Transform3D(1, 0, 0, 0, 0.84806406, 0.5298937, 0, -0.5298937, 0.84806406, 0, 0, 0)
 

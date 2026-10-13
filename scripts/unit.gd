@@ -8,7 +8,7 @@ const OUTLINE_SELECT := preload("res://materials/outline_select.tres")
 
 var is_selected : bool = false
 var is_hovered : bool = false
-var planned_path : Array[BoatPath]
+var planned_path := BoatPath.new()
 var speed: float = 50
 var type: UnitType = UnitType.ALLY
 
@@ -31,14 +31,14 @@ var heading: Vector2:
 var start: Vector2:
 	get:
 		if planned_path.size() > 0:
-			return planned_path[-1].get_point(-1)
+			return planned_path.get_point(-1)
 		else:
 			return ground_position
 			
 var start_heading: Vector2:
 	get:
 		if planned_path.size() > 0:
-			return planned_path[-1].get_dir(-1)
+			return planned_path.get_dir(-1)
 		else:
 			return heading
 
@@ -54,10 +54,7 @@ var travel_range: TravelRange:
 		
 var planned_range: float:
 	get:
-		var dist = 0.0
-		for path in planned_path:
-			dist += path.length()
-		return dist
+		return planned_path.length()
 
 @onready var model : Node3D = $Model
 
@@ -71,25 +68,22 @@ func set_hovered(value: bool) -> void:
 	_update_outline()
 	
 func draw_path(preview_path := BoatPath.new()) -> void:
-	var merged_path = BoatPath.merge(planned_path)
-	var markers = BoatPath.find_markers(planned_path)
-	merged_path.append_path(preview_path)
-	markers.append_marker(preview_path)
-	path_preview.draw_path(merged_path, travel_range, is_selected)
-	path_waypoints.draw_markers(markers, travel_range, is_selected)
+	var preview = planned_path.append_new(preview_path)
+	path_preview.draw_path(preview, travel_range, is_selected)
+	path_waypoints.draw_markers(preview, travel_range, is_selected)
 	
 func clear_path() -> void:
 	planned_path.clear()
 
 func add_path(path: BoatPath) -> void:
 	if travel_range.within_range(planned_range + path.length()):
-		planned_path.append(path)
+		planned_path.append_path(path)
 
 func delete_path(index: int) -> void:
-	planned_path.pop_at(index)
+	planned_path.remove_path_to(planned_path.get_waypoint(index))
 	
 func verify_path() -> void:
-	if !travel_range.contains(planned_range):
+	if not travel_range.contains(planned_range):
 		clear_path()
 
 func _update_outline() -> void:

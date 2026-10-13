@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bi1socx5xrbum"]
+
+[ext_resource type="Material" uid="uid://d0cojj53b6uij" path="res://materials/water.tres" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://cclcuwsl5x17x" path="res://scenes/unit.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://dbhi66pfcoqw7" path="res://scenes/controller.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://cl14q1ivo4k1r" path="res://scenes/camera_rig.tscn" id="5_7mycd"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7y7d4"]
+material = ExtResource("1_1bvp3")
+size = Vector2(200, 200)
+subdivide_width = 128
+subdivide_depth = 128
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1bvp3"]
+size = Vector3(200, 0.5, 200)
+
+[node name="Main" type="Node" unique_id=1089492259]
+
+[node name="World" type="Node3D" parent="." unique_id=1014392462]
+
+[node name="Water" type="StaticBody3D" parent="World" unique_id=1682083738]
+
+[node name="WaterMesh" type="MeshInstance3D" parent="World/Water" unique_id=1040135878]
+mesh = SubResource("PlaneMesh_7y7d4")
+
+[node name="WaterCollider" type="CollisionShape3D" parent="World/Water" unique_id=1245462949]
+shape = SubResource("BoxShape3D_1bvp3")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1331578859]
+
+[node name="PanelContainer" type="PanelContainer" parent="UI" unique_id=330740269]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="CameraRig" parent="." unique_id=1829092561 instance=ExtResource("5_7mycd")]
+
+[node name="Controller" parent="." unique_id=629880235 instance=ExtResource("4_lquwl")]
+
+[node name="StateManager" type="Node" parent="." unique_id=994780]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=201992766]
+transform = Transform3D(1, 0, 0, 0, 0.84806406, 0.5298937, 0, -0.5298937, 0.84806406, 0, 0, 0)
+
+[node name="Unit" parent="." unique_id=700282534 instance=ExtResource("2_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Unit2" parent="." unique_id=458135210 instance=ExtResource("2_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.053, 0.8, 0)
+
+[node name="Unit3" parent="." unique_id=755659263 instance=ExtResource("2_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 14.953)

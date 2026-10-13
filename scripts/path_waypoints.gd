@@ -32,12 +32,12 @@ func _ready() -> void:
 	multimesh = mm
 	material_override = MAT
 
-func draw_markers(markers_path: BoatPath, r: TravelRange, f: bool) -> void:
-	var markers = min(markers_path.size(), MAX_MARKERS)
+func draw_markers(path: BoatPath, r: TravelRange, f: bool) -> void:
+	var markers = min(path.waypoints_size(), MAX_MARKERS)
 	for i in markers:
-		var point = markers_path.get_point(i)
+		var point = path.get_waypoint(i)
 		multimesh.set_instance_transform(i, Transform3D(Basis(), Vector3(point.x, CROSS_OFFSET, point.y)))
-		multimesh.set_instance_color(i, _color_for(markers_path.get_dist(i), r, f))
+		multimesh.set_instance_color(i, _color_for(path.get_dist_at(point), r, f))
 	multimesh.visible_instance_count = markers
 
 func _color_for(dist: float, r: TravelRange, f: bool) -> Color:

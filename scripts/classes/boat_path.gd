@@ -4,6 +4,7 @@ extends RefCounted
 var points := PackedVector2Array()
 var dists := PackedFloat32Array() # dists[i] = arc length from points[0] to points[i]
 var dirs := PackedVector2Array() # dirs[i] = vector pointing from points[i] to points[i + 1]
+var waypoints := PackedVector2Array()
 
 static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: float, step := 0.5) -> BoatPath:
 	var result := BoatPath.new()
@@ -37,22 +38,9 @@ static func plan(start: Vector2, heading: Vector2, target: Vector2, radius: floa
 	if best_len < INF:
 		result._sample(best_c, radius, best_start_angle, best_sweep, best_s, target, step)
 	return result
-	
-static func merge(array: Array[BoatPath]) -> BoatPath:
-	var merged = BoatPath.new()
-	for path in array:
-		merged.append_path(path)
-	return merged
-	
-static func find_markers(array: Array[BoatPath]) -> BoatPath:
-	var m := BoatPath.new()
-	var dist := 0.0
-	for path in array:
-		dist += path.get_dist(-1)
-		m._append(path.get_point(-1), dist, Vector2.ZERO)
-	return m
 
 func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: float, target: Vector2, step: float) -> void:
+	waypoints.append(target)
 	var arc_steps := int(sweep * radius / step)
 	var rad_step := s * step / radius
 	for i in arc_steps:
@@ -74,11 +62,6 @@ func _push(point: Vector2, dir: Vector2) -> void:
 	points.append(point)
 	dists.append(dist)
 	dirs.append(dir)
-	
-func _append(point: Vector2, dist: float, dir: Vector2) -> void:
-	points.append(point)
-	dists.append(dist)
-	dirs.append(dir)
 
 func is_empty() -> bool:
 	return points.is_empty()
@@ -89,6 +72,9 @@ func length() -> float:
 func size() -> int:
 	return points.size()
 	
+func waypoints_size() -> int:
+	return waypoints.size()
+	
 func get_point(index: int) -> Vector2:
 	return points[index]
 	
@@ -97,6 +83,27 @@ func get_dist(index: int) -> float:
 	
 func get_dir(index: int) -> Vector2:
 	return dirs[index]
+	
+func get_dist_at(point: Vector2) -> float:
+	var i = points.bsearch(point)
+	if i == -1:
+		return 0
+	return dists[i]
+	
+func get_dir_at(point: Vector2) -> Vector2:
+	var i = points.bsearch(point)
+	if i == -1:
+		return Vector2.ZERO
+	return dirs[i]
+	
+func get_waypoint(index: int) -> Vector2:
+	return waypoints[index]
+	
+func end_point() -> Vector2:
+	return points[-1]
+	
+func end_heading() -> Vector2:
+	return dirs[-1]
 
 func append_path(other: BoatPath) -> void:
 	if other == null or other.is_empty():
@@ -109,11 +116,25 @@ func append_path(other: BoatPath) -> void:
 		points.append(other.points[i])
 		dists.append(offset + other.dists[i])
 		dirs.append(other.dirs[i])
+	for i in other.waypoints.size():
+		waypoints.append(other.waypoints[i])
 		
-func append_marker(other: BoatPath) -> void:
-	if other == null or other.is_empty():
+func remove_path_to(target: Vector2) -> void:
+	var i = points.bsearch(target)
+	var j = waypoints.bsearch(target)
+	if i == -1 or j == -1:
 		return
-	var dist = other.get_dist(-1) + dists[-1] if !dists.is_empty() else other.get_dist(-1)
-	points.append(other.get_point(-1))
-	dists.append(dist)
-	dirs.append(Vector2.ZERO)
+	points = points.slice(i)
+	waypoints = waypoints.slice(j)
+	
+func clear() -> void:
+	points.clear()
+	dists.clear()
+	dirs.clear()
+	waypoints.clear()
+	
+func append_new(other: BoatPath) -> BoatPath:
+	var new = BoatPath.new()
+	new.append_path(self)
+	new.append_path(other)
+	return new

@@ -4,14 +4,15 @@ extends Node
 const UNIT_LAYER := 1 << 1 # layer 2
 const GROUND_LAYER := 1 << 0 # layer 1
 
+var player: Player
+
 var selected_unit: Unit;
 var hovered_unit: Unit;
 var preview_path: PackedVector2Array;
 
+var input_state: InputState
 var basic_state: InputState
 var charting_state: InputState
-
-var input_state: InputState
 
 func _ready() -> void:
 	basic_state = BasicState.new(self)
@@ -38,23 +39,25 @@ func get_unit_at_cursor() -> Unit:
 	var hit := _raycast(UNIT_LAYER)
 	if hit.is_empty():
 		return null
-	return hit.collider
+	return hit.collider as Unit
 		
 func get_path_to_cursor() -> BoatPath:
+	if not is_instance_valid(selected_unit):
+		return BoatPath.new()
 	var hit := _raycast(GROUND_LAYER)
 	if hit.is_empty():
 		return BoatPath.new()
 	var pos : Vector3 = hit.position
 	var target := Vector2(pos.x, pos.z)
-	if is_instance_valid(selected_unit):
-		return BoatPath.plan(selected_unit.start, selected_unit.start_heading, target, selected_unit.turn_radius)
-	return BoatPath.new()
+	return BoatPath.plan(selected_unit.start, selected_unit.start_heading, target, selected_unit.turn_radius)
 	
 func select_unit(unit: Node) -> void:
+	clear_selection()
 	selected_unit = unit
 	unit.set_selected(true)
 	
 func hover_unit(unit: Node) -> void:
+	clear_hover()
 	hovered_unit = unit
 	unit.set_hovered(true)
 
@@ -71,7 +74,8 @@ func clear_hover() -> void:
 func set_state(new_state: InputState) -> void:
 	if new_state == input_state:
 		return
-	if input_state:
+	var old = input_state
+	input_state = new_state
+	if old:
 		input_state.exit()
 	new_state.enter()
-	input_state = new_state
