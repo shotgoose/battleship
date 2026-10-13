@@ -54,6 +54,13 @@ func _sample(c: Vector2, radius: float, start_angle: float, sweep: float, s: flo
 	if points[-1].distance_to(target) > 0.001:
 		_push(target, dir)
 	waypoints.append(points.size() - 1)
+	
+static func reconstruct(start: Vector2, heading: Vector2, path: BoatPath, radius: float, step := 0.5) -> BoatPath:
+	var result = BoatPath.new()
+	for i in path.waypoints_size():
+		var index = path.get_waypoint(i)
+		result.append_path(plan(start, heading, path.get_point(index), radius, step))
+	return result
 
 func _push(point: Vector2, dir: Vector2):
 	var dist := 0.0
