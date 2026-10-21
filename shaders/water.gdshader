@@ -2,7 +2,7 @@ shader_type spatial;
 render_mode diffuse_toon, specular_toon;
 
 uniform sampler2D noisemap;
-uniform float wave_height = 0.1;
+uniform float wave_height = 0.3;
 uniform float normal_offset = 0.01;
 uniform float plane_size = 2.0;
 uniform float tile = 1.0;
@@ -17,7 +17,6 @@ float height(vec2 uv, float time) {
 }
 
 vec3 normal(vec2 uv, float time) {
-	float h = height(uv, time);
 	
 	float dr = height(uv + vec2(normal_offset, 0.0), time);
 	float dl = height(uv - vec2(normal_offset, 0.0), time);
@@ -37,8 +36,8 @@ void vertex() {
 
 void fragment() {
 	float fresnel = 1.0 - dot(NORMAL, VIEW);
-	ALBEDO = mix(vec3(0.005, 0.04, 0.03), vec3(0.05, 0.07, 0.15), fresnel);
+	ALBEDO = mix(vec3(0.005, 0.04, 0.03), vec3(0.05, 0.07, 0.20), fresnel);
 	ROUGHNESS = 0.0;
-	RIM = 0.4;
-	METALLIC = 0.3;
+	RIM = 0.9;
+	METALLIC = 0.01;
 }
